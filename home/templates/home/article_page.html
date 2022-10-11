@@ -1,0 +1,60 @@
+{% extends "kb_base.html" %}
+{% load wagtailcore_tags %}
+{% load static %}
+
+{% block body_class %}template-homepage{% endblock %}
+
+{% block extra_css %}
+
+{% endblock extra_css %}
+
+{% block singlearticle %}
+<div class="panel panel-default">
+    <div class="article-heading-abb">
+        <a href="#">
+            <i class="fa fa-pencil-square-o"></i> {{ page.title }}</a>
+    </div>
+    <div class="article-info">
+        <div class="art-date">
+            <a href="#">
+                <i class="fa fa-calendar-o"></i> {{ page.pubdate|date:"F Y" }} </a>
+        </div>
+        <div class="art-category">
+            {% for a in page.kmkauthors.all %}
+            <a href="/?auth_id={{ a.auth.id }}">
+                <i class="fa fa-user"></i>  {{ a.auth }}  </a>
+            {% endfor %}    
+        </div>
+    </div>
+    <div class="article-content">
+        {% include_block page.article_body %}
+    </div>
+    <div class="article-content">
+        <div class="article-tags">
+            <b>Tags:</b>
+            {% for t in page.tags.all %}
+            <a href="/?tag={{ t }}" class="btn btn-default btn-o btn-sm">{{ t }}</a>
+
+            {% endfor %}
+        </div>
+    </div>
+    <hr class="style-three">
+    <div class="article-feedback">
+        <!-- <h2>
+            <small>Was This Article Helpful?</small>
+        </h2> -->
+        {% if page.link_to_hard_copy %}
+        <a href="{{ page.link_to_hard_copy }}" target="_blank"><i class="fa fa-file-pdf-o" style="font-size:24px"></i>&nbsp;PDF</a>
+        {% endif %}
+        
+        <!-- <button type="button" class="btn btn-danger btn-o btn-wide">No
+            <i class="fa fa-thumbs-o-down"></i>
+        </button> -->
+    </div>
+    
+</div>
+<div>
+    <a href="/" style="float: right">На головну</a>
+</div>
+
+{% endblock singlearticle %}

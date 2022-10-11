@@ -1,0 +1,191 @@
+{% load wagtailcore_tags %}
+{% load static %}
+{% load static wagtailcore_tags wagtailuserbar %}
+
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>KMK Science</title>
+
+    <link href="{% static 'images/favicon.ico' %}" rel="icon" type="image/x-icon" />
+    
+    <!-- LOADING STYLESHEETS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/font-awesome.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/kmk.css' %}">
+</head>
+
+<body>
+    <!-- TOP NAVIGATION -->
+    <div class="container-fluid">
+        <div class="navigation" style="margin-top:0px">
+            <div class="row" style="background-color: #26303a">
+                <div class="pull-left">
+                    <ul class="topnav">
+                        <li>
+                            <a href="/">
+                                <i class="fa fa-user-md" aria-hidden="true"></i>&nbsp;&nbsp;Кам'янський фаховий медичний коледж</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END TOP NAVIGATION -->
+    <!-- SEARCH FIELD AREA -->
+    <div class="searchfield bg-hed-six">
+        <div class="container" style="padding-top: 20px; padding-bottom: 20px;">
+            <div class="row text-center margin-bottom-20">
+                <h1 class="white"> Science Base</h1>
+                <span class="nested"> Репозиторій наукових публікацій КФМК </span>
+            </div>
+            <br>
+            <div class="row search-row">
+                <form action="/" method="get">
+                    <input type="text" name="query" class="search" placeholder="Введіть пошуковий запрос">
+                    <button class="buttonsearch btn btn-info btn-lg">Шукати</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- END SEARCH FIELD AREA -->
+    <!-- MAIN SECTION -->
+    <div class="container featured-area-default padding-30">
+        <div class="row">
+            <!-- ARTICLE OVERVIEW SECTION -->
+            <div class="col-md-8 padding-20">
+                <div class="row">
+                    <!-- BREADCRUMBS -->
+                    {% block breadcrumb %} {% endblock breadcrumb %}
+                    <!-- END BREADCRUMBS -->
+
+                    <!-- ARTICLES -->
+                    {% block articles %} {% endblock articles %}                 
+                    <!-- END ARTICLES -->
+
+                    <!-- SINGLE ARTICLE -->
+                    {% block singlearticle %} {% endblock singlearticle %}               
+                    <!-- END SINGLE ARTICLE -->
+
+                    <!-- PAGINATION -->
+                    {% block pagination %} {% endblock pagination %}
+                    <!-- END PAGINATION -->
+                </div>
+            </div>
+            <!-- END ARTICLES OVERVIEW SECTION-->
+            <!-- SIDEBAR STUFF -->
+                {% block sidebarstuff %} 
+                    <div class="col-md-4 padding-20">
+
+                        <div class="row margin-top-20" style="margin-top:0px">
+                            <div class="col-md-12">
+                                <div class="fb-heading-small">
+                                    За роком
+                                </div>
+                                <hr class="style-three">
+                                <div class="fat-content-small padding-left-10">
+                                    <ul>
+                                        {% for y in year_list %}
+                                        <li>
+                                            <a href="?year={{ y }}">
+                                                <i class="fa fa-calendar-o"></i>{{ y }}</a>
+                                        </li>
+                                    {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                
+                        <!-- POPULAR TAGS (SHOW MAX 20 TAGS) -->
+                        <div class="row margin-top-20">
+                            <div class="col-md-12">
+                                <div class="fb-heading-small">
+                                    Популярні тегі
+                                </div>
+                                <hr class="style-three">
+                                <div class="fat-content-tags padding-left-10">
+                                    {% for t in top_tags %}
+                                    <!-- <a href="/search/bytag/{{ t }}/" class="btn btn-default btn-o btn-sm">{{ t }}</a> -->
+                                    <a href="?tag={{ t }}" class="btn btn-default btn-o btn-sm">{{ t }}</a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        <!-- END POPULAR TAGS (SHOW MAX 20 TAGS) -->
+                    </div>
+                {% endblock sidebarstuff %}
+            <!-- END SIDEBAR STUFF -->
+        </div>
+    </div>
+    <!-- END MAIN SECTION -->
+
+    <!-- FOOTER -->
+    <div class="container-fluid footer marg30">
+        <div class="container">
+            <!-- FOOTER COLUMN ONE -->
+            <div class="col-xs-12 col-sm-8 col-md-8 margin-top-20">
+                <div class="panel-transparent">
+                    <div class="footer-heading">How it works</div>
+                    <div class="footer-body">
+                        <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt
+                            ut laoreet dolore magna aliquam erat volutpat.</p>
+                        <p>Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip
+                            ex ea commodo consequat. </p>
+                    </div>
+                </div>
+            </div>
+            <!-- END FOOTER COLUMN ONE -->
+            <!-- FOOTER COLUMN TWO -->
+                <!-- I delete this block and expand first -->
+            <!-- END FOOTER COLUMN TWO -->
+            <!-- FOOTER COLUMN THREE -->
+            {% block footer_column_three %}
+                <div class="col-xs-12 col-sm-4 col-md-4 margin-top-20">
+                    <div class="panel-transparent">
+                        <div class="footer-heading">Топ авторів</div>
+                        <div class="footer-body">
+                            <ul>
+                                {% for au in top_authors %}
+                                    <li>
+                                        <a href="/?auth_id={{ au.id }}">
+                                            <i class="fa fa-user"></i> {{ au }} ({{au.num_art}})</a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            {% endblock footer_column_three %}
+            <!-- END FOOTER COLUMN THREE -->
+        </div>
+    </div>
+    <!-- END FOOTER -->
+
+    <!-- COPYRIGHT INFO -->
+    <div class="container-fluid footer-copyright marg30">
+        <div class="container">
+            <div class="pull-left">
+                Copyright © 2022
+            </div>
+            <div class="pull-right">
+                <a href="https://www.facebook.com/kammedcollege"><i class="fa fa-facebook fa-lg"></i></a>&nbsp;&nbsp;
+                <a href="https://www.youtube.com/channel/UCxQWl-NcysJrq-mfoVusZRA"><i class="fa fa-youtube-play fa-lg"></i></a>&nbsp;&nbsp;
+                <a href="https://www.instagram.com/kammedcollege"><i class="fa fa-instagram fa-lg"></i></a>
+            </div>
+        </div>
+    </div>
+    <!-- END COPYRIGHT INFO -->
+
+    <!-- LOADING MAIN JAVASCRIPT -->
+    <script type="text/javascript" src="{% static 'js/jquery-2.2.4.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/main.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/kmk.js' %}"></script>
+    <script src='https://cdn.rawgit.com/VPenkov/okayNav/master/app/js/jquery.okayNav.js'></script>
+</body>
+
+</html>

@@ -1,0 +1,92 @@
+{% extends "kb_base.html" %}
+{% load wagtailcore_tags %}
+{% load static %}
+
+<!-- {% block body_class %}template-homepage{% endblock %} -->
+
+{% block extra_css %}
+
+{% endblock extra_css %}
+
+{% block breadcrumb %}
+    <div class="breadcrumb-container">
+        <ol class="breadcrumb">
+            <li>
+                <a href="/">
+                    <i class="fa fa-home"></i>
+                </a>
+            <li class="active">{{ sub_title }}</li>
+        </ol>
+    </div>
+{% endblock breadcrumb %}
+
+
+{% block articles %}
+<!-- <div class="fb-heading">
+    {{ all_articles }}
+</div> -->
+<!-- <hr class="style-three"> -->
+
+    {% for art in arts %}
+    <div class="panel panel-default">
+        <div class="article-heading-abb">
+            <a href="{% pageurl art %}">
+                <i class="fa fa-pencil-square-o"></i> {{ art.title }}</a>
+        </div>
+        <div class="article-info">
+            <div class="art-date">
+                <i class="fa fa-calendar-o"></i> {{ art.pubdate|date:"F Y" }}
+            </div>
+            <div class="art-category">
+                {% for au in art.kmkauthors.all %}
+                <a href="?auth_id={{ au.auth.id }}">
+                    <i class="fa fa-user"></i>  {{ au.auth }}  </a>
+                {% endfor %}    
+            </div>
+        </div>
+        <div class="article-content">
+            <p class="block-with-text">
+                {% if art.annotation %}
+                    {{ art.annotation|richtext }}
+                {% else %}
+                    {{ art.getAnnotation }}
+                {% endif %}
+            </p>
+        </div>
+        <div class="article-read-more">
+            <a href="{% pageurl art %}" class="btn btn-default btn-wide">Read more...</a>
+        </div>
+    </div>
+    {% endfor %}
+{% endblock articles %}
+
+
+{% block pagination %}
+    {% if arts.paginator.num_pages > 1 %}
+        <nav class="text-center">
+            <ul class="pagination">
+                    <li class={% if arts.has_previous %} "enabled" {% else %} "disabled" {% endif %}>
+                        <a href= {% if arts.has_previous %} "?page={{ arts.previous_page_number }}" {% else %} "#" {% endif %}  aria-label="Previous">
+                                <i class="fa fa-arrow-circle-left"></i> Назад</span>
+                        </a>
+                    </li>
+                
+                    {% for page_num in arts.paginator.page_range %}
+                    {% if arts.number == page_num %} <li class="active"> {% else %} <li class="enabled">{% endif %}
+                        <a href="?page={{ page_num }}">{{page_num}}
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    {% endfor %}
+
+                    <li class={% if arts.has_next %} "enabled" {% else %} "disabled" {% endif %}>
+                        <a href={% if arts.has_next %}"?page={{ arts.next_page_number }}" {% else %} "#" {% endif %} aria-label="Previous">
+                            <span aria-hidden="true">Уперед
+                                <i class="fa fa-arrow-circle-right"></i>
+                            </span>
+                        </a>
+                    </li>
+            </ul>
+        </nav>
+    {% endif %}
+{% endblock pagination %}
