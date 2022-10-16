@@ -7,6 +7,7 @@ from wagtail.models import Page, Orderable
 from wagtail.fields import StreamField, RichTextField
 from wagtail import blocks
 from wagtail.images.blocks import ImageChooserBlock
+from wagtail.contrib.table_block.blocks import TableBlock
 from wagtail.admin.edit_handlers import FieldPanel, FieldRowPanel
 from wagtail.admin.panels import InlinePanel
 from wagtail.snippets.models import register_snippet
@@ -110,6 +111,7 @@ class ArticlePage(Page):
             ("mtext", blocks.TextBlock()),
             ("richtext", blocks.RichTextBlock()),
             ("image", ImageChooserBlock()),
+            ("table", TableBlock()),
         ],
         use_json_field=True,
         blank=True,
