@@ -1,5 +1,5 @@
 {% extends "kb_base.html" %}
-{% load wagtailcore_tags %}
+{% load wagtailcore_tags wagtailimages_tags %}
 {% load static %}
 
 {% block body_class %}template-homepage{% endblock %}
@@ -27,7 +27,15 @@
         </div>
     </div>
     <div class="article-content">
-        {% include_block page.article_body %}
+        {% for block in page.article_body %}
+            {% if block.block_type == 'image' %}
+                {% image block.value original as img %}
+                <img class="img-fluid" style="max-width:80%; height:auto;" alt="" src="{{ img.url }}">
+            {% else %}
+                {{ block }}  
+            {% endif %}
+        {% endfor %}
+        <!-- {% include_block page.article_body %} -->
     </div>
     <div class="article-content">
         <div class="article-tags">
