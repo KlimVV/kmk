@@ -29,8 +29,11 @@
     <div class="article-content">
         {% for block in page.article_body %}
             {% if block.block_type == 'image' %}
-                {% image block.value original as img %}
-                <img class="img-fluid" style="max-width:80%; height:auto;" alt="" src="{{ img.url }}">
+                {% image block.value width-500 as img %}
+                <div class="text-center">
+                    <img style="max-width:80%; height:auto;" alt="" src="{{ img.url }}">
+                </div>
+                
             {% else %}
                 {{ block }}  
             {% endif %}
