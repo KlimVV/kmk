@@ -8,7 +8,7 @@ from wagtail.fields import StreamField, RichTextField
 from wagtail import blocks
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.contrib.table_block.blocks import TableBlock
-from wagtail.admin.edit_handlers import FieldPanel, FieldRowPanel
+from wagtail.admin.panels import FieldPanel, FieldRowPanel
 from wagtail.admin.panels import InlinePanel
 from wagtail.snippets.models import register_snippet
 from wagtail.search import index
@@ -72,7 +72,7 @@ class HomePage(Page):
 
 
 @register_snippet
-class Author(models.Model):
+class Author(index.Indexed, models.Model):
 
     name = models.CharField("Ім'я", max_length=25)
     fname = models.CharField("По батькові", max_length=25, null=True, blank=True)
@@ -85,6 +85,20 @@ class Author(models.Model):
         on_delete=models.SET_NULL,
         related_name="photo",
     )
+    search_name = models.CharField("TransName", max_length=25, null=True, blank=True)
+
+    panels = [
+        FieldPanel('name'),
+        FieldPanel('search_name'),
+        FieldPanel('fname'),
+        FieldPanel('surname'),
+        FieldPanel('academic_degree'),
+        FieldPanel('personal_photo'),
+    ]
+
+    search_fields=[
+        index.SearchField('search_name', partial_match=True),
+        ]
 
     def __str__(self):
         return self.surname + " " + self.name[0] + "." + self.fname[0] + "."

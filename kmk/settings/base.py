@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     "wagtail.contrib.table_block",
     "wagtail.embeds",
     "wagtail.sites",
+    'wagtail.locales',
     "wagtail.users",
     "wagtail.snippets",
     "wagtail.documents",
@@ -56,6 +57,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.middleware.security.SecurityMiddleware",
+    'django.middleware.locale.LocaleMiddleware',
 ]
 
 ROOT_URLCONF = "kmk.urls"
@@ -119,6 +121,8 @@ LANGUAGE_CODE = "uk-uk"
 TIME_ZONE = "UTC"
 
 USE_I18N = True
+
+WAGTAIL_I18N_ENABLED = True
 
 USE_L10N = True
 
