@@ -163,3 +163,4 @@ cython_debug/
 /manage.py
 media
 static
+/requirements.txt

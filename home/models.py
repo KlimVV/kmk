@@ -25,39 +25,48 @@ class HomePage(Page):
     def get_context(self, request, *args, **kwargs):
         """Adding custom stuff to our context."""
         context = super().get_context(request, *args, **kwargs)
-        
+
         search_query = request.GET.get("query", None)
         tag = request.GET.get("tag", None)
         auth_id = request.GET.get("auth_id", None)
         year = request.GET.get("year", None)
 
+        additional_get_str = ""
+
         if search_query:
             all_articles = ArticlePage.objects.search(search_query, partial_match=False)
             sub_title = "Статті по запиту < {0} >".format(search_query)
+            additional_get_str = "&query={0}".format(search_query)
         elif tag:
             all_articles = ArticlePage.objects.filter(tags__name__exact=tag)
             sub_title = "Статті з тегом < {0} >".format(tag)
+            additional_get_str = "&tag={0}".format(tag)
         elif auth_id:
-            all_articles = ArticlePage.objects.filter(kmkauthors__auth__id=auth_id) 
-            sub_title = "Статті автора/соавтора < {0} >".format(Author.objects.get(pk=auth_id))
+            all_articles = ArticlePage.objects.filter(kmkauthors__auth__id=auth_id)
+            sub_title = "Статті автора/соавтора < {0} >".format(
+                Author.objects.get(pk=auth_id)
+            )
+            additional_get_str = "&auth_id={0}".format(auth_id)
         elif year:
             all_articles = ArticlePage.objects.filter(pubdate__year=year)
             sub_title = "Статті за < {0} > рік".format(year)
+            additional_get_str = "&year={0}".format(year)
         else:
             # search_results = Page.objects.none()
             all_articles = ArticlePage.objects.live().public().order_by("-pubdate")
             sub_title = "Усі статті"
 
         paginator = Paginator(all_articles, 5)
-        page = request.GET.get("page")
 
         try:
+            page = request.GET.get("page")
             articles = paginator.page(page)
         except PageNotAnInteger:
             articles = paginator.page(1)
         except EmptyPage:
             articles = paginator.page(paginator.num_pages)
 
+        context["additional_get_str"] = additional_get_str
         context["arts"] = articles
         context["page"] = page
         context["top_authors"] = (
@@ -67,13 +76,12 @@ class HomePage(Page):
         )
         context["top_tags"] = ArticlePage.tags.most_common()[:10]
         context["sub_title"] = sub_title
-        context["year_list"] = range(2021, date.today().year+1)
+        context["year_list"] = range(2021, date.today().year + 1)
         return context
 
 
 @register_snippet
 class Author(index.Indexed, models.Model):
-
     name = models.CharField("Ім'я", max_length=25)
     fname = models.CharField("По батькові", max_length=25, null=True, blank=True)
     surname = models.CharField("Прізвище", max_length=25)
@@ -88,17 +96,18 @@ class Author(index.Indexed, models.Model):
     search_name = models.CharField("TransName", max_length=25, null=True, blank=True)
 
     panels = [
-        FieldPanel('name'),
-        FieldPanel('search_name'),
-        FieldPanel('fname'),
-        FieldPanel('surname'),
-        FieldPanel('academic_degree'),
-        FieldPanel('personal_photo'),
+        FieldPanel("name"),
+        # FieldPanel('search_name'),
+        FieldPanel("fname"),
+        FieldPanel("surname"),
+        FieldPanel("academic_degree"),
+        FieldPanel("personal_photo"),
     ]
 
-    search_fields=[
-        index.SearchField('search_name', partial_match=True),
-        ]
+    search_fields = [
+        # index.SearchField('search_name'),
+        index.AutocompleteField("surname"),
+    ]
 
     def __str__(self):
         return self.surname + " " + self.name[0] + "." + self.fname[0] + "."
@@ -115,7 +124,6 @@ class Tag(TaggitTag):
 
 
 class ArticlePage(Page):
-
     team = models.CharField("Усі автори", max_length=1024)
     pubtitle = models.CharField("Повна назва публікації", max_length=1024)
     annotation = RichTextField("Анотація", blank=True)
@@ -174,7 +182,7 @@ class ArticlePage(Page):
             .order_by("-num_art")[:5]
         )
         context["top_tags"] = ArticlePage.tags.most_common()[:10]
-        context["year_list"] = range(2021, date.today().year+1)
+        context["year_list"] = range(2021, date.today().year + 1)
         return context
 
     def getAnnotation(self):
@@ -191,7 +199,6 @@ STATUS_CHOICES = [
 
 
 class ArticleToAuthor(Orderable):
-
     page = ParentalKey(
         "ArticlePage", on_delete=models.CASCADE, related_name="kmkauthors"
     )
