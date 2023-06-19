@@ -34,21 +34,21 @@ class HomePage(Page):
         additional_get_str = ""
 
         if search_query:
-            all_articles = ArticlePage.objects.search(search_query, partial_match=False)
+            all_articles = ArticlePage.objects.search(search_query).order_by("-pubdate")
             sub_title = "Статті по запиту < {0} >".format(search_query)
             additional_get_str = "&query={0}".format(search_query)
         elif tag:
-            all_articles = ArticlePage.objects.filter(tags__name__exact=tag)
+            all_articles = ArticlePage.objects.filter(tags__name__exact=tag).order_by("-pubdate")
             sub_title = "Статті з тегом < {0} >".format(tag)
             additional_get_str = "&tag={0}".format(tag)
         elif auth_id:
-            all_articles = ArticlePage.objects.filter(kmkauthors__auth__id=auth_id)
+            all_articles = ArticlePage.objects.filter(kmkauthors__auth__id=auth_id).order_by("-pubdate")
             sub_title = "Статті автора/соавтора < {0} >".format(
                 Author.objects.get(pk=auth_id)
             )
             additional_get_str = "&auth_id={0}".format(auth_id)
         elif year:
-            all_articles = ArticlePage.objects.filter(pubdate__year=year)
+            all_articles = ArticlePage.objects.filter(pubdate__year=year).order_by("-pubdate")
             sub_title = "Статті за < {0} > рік".format(year)
             additional_get_str = "&year={0}".format(year)
         else:
