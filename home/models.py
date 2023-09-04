@@ -34,7 +34,7 @@ class HomePage(Page):
         additional_get_str = ""
 
         if search_query:
-            all_articles = ArticlePage.objects.search(search_query).order_by("-pubdate")
+            all_articles = ArticlePage.objects.search(search_query) #.order_by("-pubdate")
             sub_title = "Статті по запиту < {0} >".format(search_query)
             additional_get_str = "&query={0}".format(search_query)
         elif tag:
