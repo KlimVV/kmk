@@ -12,7 +12,8 @@ from wagtail.admin.panels import FieldPanel, FieldRowPanel
 from wagtail.admin.panels import InlinePanel
 from wagtail.snippets.models import register_snippet
 from wagtail.search import index
-from wagtail.search.models import Query
+#from wagtail.search.models import Query
+from wagtail.contrib.search_promotions.models import Query
 from modelcluster.fields import ParentalKey
 from modelcluster.tags import ClusterTaggableManager
 from taggit.models import Tag as TaggitTag
